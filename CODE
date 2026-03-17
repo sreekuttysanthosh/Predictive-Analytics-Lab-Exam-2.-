@@ -1,0 +1,95 @@
+import pandas as pd
+import numpy as np 
+import seaborn as sns
+import matplotlib.pyplot as plt
+Load data
+df=pd.read_csv("C:\\Users\\SREEKUTTY\\Downloads\\mixed_classification_dataset.csv")
+df.head()
+df.info()
+df.describe()
+df.isnull().sum()
+df["Target"].value_counts()
+print(df['Target'].unique())
+df['Target'] = df['Target'].astype(str).str.strip().str.lower()
+print(df['Target'].unique())
+df['Target'] = df['Target'].map({'yes': 1, 'no': 0})
+print(df['Target'].isnull().sum())
+print(df.shape)
+EDA
+df['Target'].value_counts().plot(kind='bar')
+plt.title('Class Distribution')
+plt.xlabel('Class')
+plt.ylabel('Count')
+plt.show()
+plt.scatter(df['Feature1'], df['Feature2'], c=df['Target'])
+plt.xlabel('Feature1')
+plt.ylabel('Feature2')
+plt.title('Data Distribution')
+plt.show()
+plt.figure()
+sns.heatmap(df.corr(), annot=True)
+plt.title('Correlation Matrix')
+plt.show()
+MODEL 
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+X = df[['Feature1', 'Feature2']]
+y = df['Target']
+model=LogisticRegression()
+model.fit(X_train,y_train)
+y_pred=model.predict(X_test)
+DECISION BOUNDARY 
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+X_vals = X.values
+y_vals = y.values
+
+
+y_pred_full = model.predict(X)
+
+# Find misclassified points
+misclassified = (y_vals != y_pred_full)
+
+
+x_min, x_max = X_vals[:,0].min()-1, X_vals[:,0].max()+1
+y_min, y_max = X_vals[:,1].min()-1, X_vals[:,1].max()+1
+
+xx, yy = np.meshgrid(
+    np.linspace(x_min, x_max, 100),
+    np.linspace(y_min, y_max, 100)
+)
+
+Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
+Z = Z.reshape(xx.shape)
+
+
+plt.contourf(xx, yy, Z, alpha=0.3)
+
+
+plt.scatter(X_vals[:,0], X_vals[:,1], c=y_vals, label='Data')
+
+
+plt.scatter(X_vals[misclassified,0],
+            X_vals[misclassified,1],
+            color='red',
+            label='Misclassified')
+
+plt.xlabel('Feature1')
+plt.ylabel('Feature2')
+plt.title('Decision Boundary with Misclassified Points')
+plt.legend()
+
+plt.show()
+
+EVALUAVTION 
+y_pred=model.predict(X_test)
+print("Accuarcy:",accuracy_score(y_test,y_pred))
+print("Confusion matrix:",confusion_matrix(y_test,y_pred))
+print("Classification:",classification_report(y_test,y_pred))
+sns.heatmap(confusion_matrix(y_test, y_pred), annot=True)
+plt.title('Confusion Matrix')
+plt.show()
