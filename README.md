@@ -56,3 +56,10 @@ Results:
 ## Conclusion
 Logistic Regression was successfully applied to classify the dataset.
 The model performs reasonably well, though some limitations exist due to overlapping data.
+
+result intreprtaion 
+The model was evaluated using accuracy, confusion matrix, and classification metrics.
+The model achieved an accuracy of76%.
+The confusion matrix shows that the majority of instances are correctly classified, with some misclassifications due to overlapping data.
+Precision and recall values indicate that the model performs reasonably well in identifying both classes.
+The F1-score shows a balanced performance between precision and recall.
